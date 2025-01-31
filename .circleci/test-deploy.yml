@@ -1,0 +1,201 @@
+version: 2.1
+orbs:
+  # Your orb will be automatically injected here during the pipeline.
+  # Reference your orb's jobs and commands below as they will exist when built.
+  orb-tools: circleci/orb-tools@12.3
+  # The orb definition is intentionally not included here. It will be injected into the pipeline.
+  git-version: {}
+
+# Use this tag to ensure test jobs always run,
+# even though the downstream publish job will only run on release tags.
+filters: &filters
+  tags:
+    only: /.*/
+
+# Filter for release tags.
+release-filters: &release-filters
+  branches:
+    ignore: /.*/
+  tags:
+    only: /^v[0-9]+\.[0-9]+\.[0-9]+$/
+
+commands:
+  check-calculation-results:    
+    parameters:
+      output_file:
+        type: string
+        default: ""
+        description: "The name of the file with calculation results."
+      expected_next_version_prod:
+        type: string
+        default: ""
+        description: "Expected next prod version."
+      expected_next_version_rc:
+        type: string
+        default: ""
+        description: "Expected next rc version."
+      expected_next_version_beta:
+        type: string
+        default: ""
+        description: "Expected next beta version."
+      expected_next_version_alpha:
+        type: string
+        default: ""
+        description: "Expected next alpha version."
+    steps:
+      - attach_workspace:
+          at: /home/circleci/git-version/calculation_results
+      
+      - run:
+          name: Check results
+          command: |            
+            source /home/circleci/git-version/calculation_results/<< parameters.output_file >>
+
+            echo "NEXT_VERSION_PROD=${NEXT_VERSION_PROD}"
+            if [[ "${NEXT_VERSION_PROD}" != "<< parameters.expected_next_version_prod >>" ]]; then
+              echo "Expected << parameters.expected_next_version_prod >> but got ${NEXT_VERSION_PROD}"
+              exit 1
+            fi
+
+            echo "NEXT_VERSION_RC=${NEXT_VERSION_RC}"
+            if [[ "${NEXT_VERSION_RC}" != "<< parameters.expected_next_version_rc >>" ]]; then
+              echo "Expected << parameters.expected_next_version_rc >> but got ${NEXT_VERSION_RC}"
+              exit 1
+            fi
+
+            echo "NEXT_VERSION_BETA=${NEXT_VERSION_BETA}"
+            if [[ "${NEXT_VERSION_BETA}" != "<< parameters.expected_next_version_beta >>" ]]; then
+              echo "Expected << parameters.expected_next_version_beta >> but got ${NEXT_VERSION_BETA}"
+              exit 1
+            fi
+
+            echo "NEXT_VERSION_ALPHA=${NEXT_VERSION_ALPHA}"
+            if [[ "${NEXT_VERSION_ALPHA}" != "<< parameters.expected_next_version_alpha >>" ]]; then
+              echo "Expected << parameters.expected_next_version_alpha >> but got ${NEXT_VERSION_ALPHA}"
+              exit 1
+            fi
+
+jobs:
+  test-calculation:
+    working_directory: /home/circleci/git-version
+    docker:
+      - image: cimg/base:current
+    steps:
+      # Test: alpha only
+      - git-version/calculate:
+          debug: "true"
+          output_file: test1
+          tags: "v1.11.0-alpha.1 v1.11.0-alpha.2"
+
+      - check-calculation-results:
+          output_file: test1
+          expected_next_version_alpha: "v1.11.0-alpha.3"
+          expected_next_version_beta: "v1.11.0-beta.1"
+          expected_next_version_rc: "v1.11.0-rc.1"
+
+      # Test: beta only
+      - git-version/calculate:
+          debug: "true"
+          output_file: test2
+          tags: "v1.11.0-beta.1 v1.11.0-beta.2"
+
+      - check-calculation-results:
+          output_file: test2
+          expected_next_version_alpha: "v1.11.0-alpha.1"
+          expected_next_version_beta: "v1.11.0-beta.3"
+          expected_next_version_rc: "v1.11.0-rc.1"
+
+      # Test: rc only
+      - git-version/calculate:
+          debug: "true"
+          output_file: test3
+          tags: "v1.11.0-rc.1"
+
+      - check-calculation-results:
+          output_file: test3
+          expected_next_version_alpha: "v1.11.0-alpha.1"
+          expected_next_version_beta: "v1.11.0-beta.1"
+          expected_next_version_rc: "v1.11.0-rc.2"
+
+      # Test: prod only #1
+      - git-version/calculate:
+          debug: "true"
+          output_file: test4
+          tags: "v1.11.0 v1.11.0-alpha.2 v1.11.0-beta.1"
+
+      - check-calculation-results:
+          output_file: test4
+          expected_next_version_prod: "v1.11.0"
+
+      # Test: prod only #2
+      - git-version/calculate:
+          debug: "true"
+          output_file: test4_1
+          tags: "v1.11.0 v1.10.111 v9.123.2222"
+
+      - check-calculation-results:
+          output_file: test4_1
+          expected_next_version_prod: "v9.123.2222"
+
+
+      # Test: alpha & beta & rc & prod & different x.x.x part
+      - git-version/calculate:
+          debug: "true"
+          output_file: test5
+          tags: "v1.11.0-alpha.1 v1.11.0-beta.2 v1.11.0-rc.1 v1.11.0 v2.0.1-alpha.1"
+
+      - check-calculation-results:
+          output_file: test5
+          expected_next_version_alpha: "v2.0.1-alpha.2"
+          expected_next_version_beta: "v2.0.1-beta.1"
+          expected_next_version_rc: "v2.0.1-rc.1"
+
+      # Test: alpha & beta & rc & prod & different x.x.x part
+      - git-version/calculate:
+          debug: "true"
+          output_file: test5_1
+          tags: "v1.11.0-alpha.1 v1.11.0-beta.2 v1.11.0-rc.9 v1.11.0 v2.0.1-alpha.9"
+
+      - check-calculation-results:
+          output_file: test5_1
+          expected_next_version_alpha: "v2.0.1-alpha.10"
+          expected_next_version_beta: "v2.0.1-beta.1"
+          expected_next_version_rc: "v2.0.1-rc.1"
+
+      # Test: valid & invalid tags
+      - git-version/calculate:
+          debug: "true"
+          output_file: test6
+          tags: "v1.11.0-alpha.1 v1.11.0-beta.2 2.0.1-alpha.9 3.0.1.1 2-3-4-5"
+
+      - check-calculation-results:
+          output_file: test6
+          expected_next_version_alpha: "v1.11.0-alpha.2"
+          expected_next_version_beta: "v1.11.0-beta.3"
+          expected_next_version_rc: "v1.11.0-rc.1"
+
+workflows:
+  test-deploy:
+    jobs:
+      # Make sure to include "filters: *filters" in every test job you want to run as part of your deployment.
+      # Test your orb's commands in a custom job and test your orb's jobs directly as a part of this workflow.
+      - test-calculation:
+          filters: *filters
+      - git-version/calculate:
+          debug: "true"
+          output_file: test6
+          filters: *filters
+      # The orb must be re-packed for publishing, and saved to the workspace.
+      - orb-tools/pack:
+          filters: *release-filters
+      - orb-tools/publish:
+          orb_name: m1k-lab/git-version
+          vcs_type: << pipeline.project.type >>
+          pub_type: production
+          # Ensure this job requires all test jobs and the pack job.
+          requires:
+            - orb-tools/pack
+            - test-calculation
+            - git-version/calculate
+          context: orb-publishing
+          filters: *release-filters

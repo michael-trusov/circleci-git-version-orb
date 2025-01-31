@@ -1,0 +1,19 @@
+description: >
+  This is a default executor using Docker and Node.
+
+docker:
+  - image: 'cimg/node:<<parameters.tag>>'
+
+working_directory: << parameters.working_directory >>
+
+parameters:
+  working_directory:
+    description: >
+      The working directory for the executor.
+    type: string
+  tag:
+    default: lts
+    description: >
+      Pick a specific cimg/node image variant:
+      https://hub.docker.com/r/cimg/node/tags
+    type: string

@@ -1,0 +1,41 @@
+description: >
+  This command calculates next versions based on passed collection of tags.
+
+parameters:
+  debug:
+    type: string
+    default: "false"
+    description: "Enable debug mode. Default is false."
+  output_folder:
+    type: string
+    default: "calculation_results"
+    description: "The directory where file with outputs will be created."
+  output_file:
+    type: string
+    default: "next_versions"
+    description: "The output file includes declaration of environment variables which can be recreated via 'source' command."
+  tags:
+    type: string
+    default: ""
+    description: "Collection of tags separated by space."
+
+steps:
+  - run:
+      environment:
+        INPUT_PARAM_OUTPUT_FOLDER: <<parameters.output_folder>>
+      name: Create << parameters.output_folder >> folder
+      command: <<include(scripts/create_output_folder.sh)>>
+
+  - run:
+      environment:
+        INPUT_PARAM_DEBUG: <<parameters.debug>>
+        INPUT_PARAM_OUTPUT_FOLDER: <<parameters.output_folder>>
+        INPUT_PARAM_OUTPUT_FILE: <<parameters.output_file>>
+        INPUT_PARAM_TAGS: <<parameters.tags>>
+      name: Calculate next versions
+      command: <<include(scripts/calculate_next_versions.sh)>>
+
+  - persist_to_workspace:
+      root: << parameters.output_folder >>
+      paths:
+        - << parameters.output_file >>

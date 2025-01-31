@@ -1,0 +1,8 @@
+version: 2.1
+
+description: >
+  This package allows to calculate next version of the artifact based on the git tags.
+
+display:
+  home_url: "https://github.com/michael-trusov/circleci-git-version-orb"
+  source_url: "https://github.com/michael-trusov/circleci-git-version-orb"
