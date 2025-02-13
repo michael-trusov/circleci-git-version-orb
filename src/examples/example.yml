@@ -1,10 +1,10 @@
 description: >
-  Sample example description.
+  You can use this orb to calculate next version of the artifact based on the git tags.
 
 usage:
   version: 2.1
   orbs:
-    <orb-name>: mt-lab/git-version@1.0.0
+    git-version: mt-lab/git-version@1.0.0
   workflows:
     use-my-orb:
       jobs:
