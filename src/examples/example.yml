@@ -4,7 +4,7 @@ description: >
 usage:
   version: 2.1
   orbs:
-    <orb-name>: mt-lab/git-version@0.0.1
+    <orb-name>: mt-lab/git-version@1.0.0
   workflows:
     use-my-orb:
       jobs:
