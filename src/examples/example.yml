@@ -6,8 +6,11 @@ description: >
 usage:
   version: 2.1
   orbs:
-    <orb-name>: <namespace>/<orb-name>@1.2.3
+    <orb-name>: mt-lab/git-version@0.0.1
   workflows:
     use-my-orb:
       jobs:
-        - <orb-name>/<job-name>
+        - git-version/calculate:
+            debug: "true"
+            output_file: versions
+            filters: *filters
