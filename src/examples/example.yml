@@ -10,4 +10,4 @@ usage:
       jobs:
         - git-version/calculate:
             debug: "true"
-            output_file: versions            
+            output_file: versions
