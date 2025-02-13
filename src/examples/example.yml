@@ -1,8 +1,6 @@
 description: >
   Sample example description.
-# Provide a use-case based example for using this orb.
-# Everything in the `usage` section will be displayed in the orb registry.
-# Comments are not retained.
+
 usage:
   version: 2.1
   orbs:
@@ -12,5 +10,4 @@ usage:
       jobs:
         - git-version/calculate:
             debug: "true"
-            output_file: versions
-            filters: *filters
+            output_file: versions            
