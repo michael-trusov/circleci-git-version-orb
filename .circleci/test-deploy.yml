@@ -189,7 +189,7 @@ workflows:
       - orb-tools/pack:
           filters: *filters
       - orb-tools/publish:
-          orb_name: m1k-lab/git-version
+          orb_name: mt-lab/git-version
           vcs_type: << pipeline.project.type >>
           pub_type: dev
           # Ensure this job requires all test jobs and the pack job.
