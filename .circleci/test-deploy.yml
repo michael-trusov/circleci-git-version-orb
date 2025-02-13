@@ -187,14 +187,14 @@ workflows:
           filters: *filters
       # The orb must be re-packed for publishing, and saved to the workspace.
       - orb-tools/pack:
-          filters: *filters
+          filters: *release-filters
       - orb-tools/publish:
           orb_name: mt-lab/git-version
           vcs_type: << pipeline.project.type >>
-          pub_type: dev
+          pub_type: production
           # Ensure this job requires all test jobs and the pack job.
           requires:
             - orb-tools/pack
             - test-calculation
           context: orb-publishing
-          filters: *filters
+          filters: *release-filters
