@@ -54,7 +54,7 @@ steps:
       steps:
         - attach_workspace:
             at: /home/circleci/git-version/<< parameters.input_folder >>
-            
+
         - run:
             environment:
               INPUT_PARAM_DEBUG: <<parameters.debug>>
