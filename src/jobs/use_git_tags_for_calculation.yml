@@ -1,0 +1,66 @@
+description: >
+  This package allows to calculate next version of the artifact based on the git tags.
+
+executor:
+  name: default
+  working_directory: /home/circleci/git-version
+
+working_directory: /home/circleci/git-version
+
+parameters:
+  debug:
+    type: string
+    default: "false"
+    description: "Enable debug mode. Default is false."
+
+  input_folder:
+    type: string
+    default: "inputs"
+    description: "The directory where file with input parameters should be stored."
+
+  input_file:
+    type: string
+    default: "param_tags"
+    description: >
+      The input file includes space separated collection of tags. This parameter can be used when data recieved dynamically, i.e.
+      result of operation 'git tags -l' etc.
+
+  output_folder:
+    type: string
+    default: outputs
+    description: "The working directory where file with outputs will be created."
+
+  output_file:
+    type: string
+    default: versions
+    description: "The name of the file where outputs will be saved."
+
+steps:
+  - checkout
+
+  - run:
+      name: Create '<< parameters.input_folder >>' folder
+      environment:
+        INPUT_PARAM_INPUT_FOLDER: << parameters.input_folder >>
+      command: <<include(scripts/create_input_folder.sh)>>
+
+  - run:
+      name: Read all git tags and store them in '<< parameters.input_folder >>/<< parameters.input_file >>' file
+      environment:
+        INPUT_PARAM_DEBUG: <<parameters.debug>>
+        INPUT_PARAM_INPUT_FOLDER: << parameters.input_folder >>
+        INPUT_PARAM_INPUT_FILE: << parameters.input_file >>
+      command: <<include(scripts/read_git_tags.sh)>>
+
+  - persist_to_workspace:
+      root: << parameters.input_folder >>
+      paths:
+        - << parameters.input_file >>
+
+  - calculate:
+      debug: << parameters.debug >>
+      input_folder: << parameters.input_folder >>
+      input_file: << parameters.input_file >>
+      output_folder: << parameters.output_folder >>
+      output_file: << parameters.output_file >>
+      tags: ""
