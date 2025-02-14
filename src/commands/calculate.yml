@@ -37,11 +37,28 @@ steps:
       command: <<include(scripts/create_output_folder.sh)>>
 
   - when:
-      condition:
-        equal: ["<< parameters.tags >>", ""]
+      condition: "<< parameters.tags >>"
+      steps:      
+        - run:
+            command: echo "Tags are provided."
+
+        - run:
+            environment:
+              INPUT_PARAM_DEBUG: <<parameters.debug>>
+              INPUT_PARAM_INPUT_FILE: ""
+              INPUT_PARAM_OUTPUT_FOLDER: <<parameters.output_folder>>
+              INPUT_PARAM_OUTPUT_FILE: <<parameters.output_file>>
+              INPUT_PARAM_TAGS: <<parameters.tags>>
+            name: Calculate next versions
+            command: <<include(scripts/calculate_next_versions.sh)>>
+  - unless:
+      condition: "<< parameters.tags >>"
       steps:
         - attach_workspace:
             at: /home/circleci/git-version/<< parameters.input_folder >>
+
+        - run:
+            command: echo "Tags are not provided."
 
         - run:
             environment:
@@ -50,16 +67,6 @@ steps:
               INPUT_PARAM_OUTPUT_FOLDER: <<parameters.output_folder>>
               INPUT_PARAM_OUTPUT_FILE: <<parameters.output_file>>
               INPUT_PARAM_TAGS: ""
-            name: Calculate next versions
-            command: <<include(scripts/calculate_next_versions.sh)>>
-      else:
-        - run:
-            environment:
-              INPUT_PARAM_DEBUG: <<parameters.debug>>
-              INPUT_PARAM_INPUT_FILE: ""
-              INPUT_PARAM_OUTPUT_FOLDER: <<parameters.output_folder>>
-              INPUT_PARAM_OUTPUT_FILE: <<parameters.output_file>>
-              INPUT_PARAM_TAGS: <<parameters.tags>>
             name: Calculate next versions
             command: <<include(scripts/calculate_next_versions.sh)>>
 
