@@ -234,7 +234,11 @@ declare -A calculated_versions
 
 tags=""
 if [[ -z $INPUT_PARAM_TAGS ]]; then
-    tags=$(git tag -l | xargs)
+    mapfile -t tags < <(tr -s ' ' '\n' < $INPUT_PARAM_INPUT_FILE)
+    if [ ${#tags[@]} -eq 0 ]; then
+        echo "No tags were found in the input file"        
+        exit 1
+    fi
 else
     tags=($INPUT_PARAM_TAGS)
 fi
