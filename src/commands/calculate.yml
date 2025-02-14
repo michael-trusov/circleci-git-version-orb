@@ -41,10 +41,6 @@ steps:
       condition: "<< parameters.tags >>"
       steps:
         - run:
-            name: check tags
-            command: echo "Tags are provided."
-
-        - run:
             environment:
               INPUT_PARAM_DEBUG: <<parameters.debug>>
               INPUT_PARAM_INPUT_FILE: ""
@@ -58,11 +54,7 @@ steps:
       steps:
         - attach_workspace:
             at: /home/circleci/git-version/<< parameters.input_folder >>
-
-        - run:
-            name: check tags
-            command: echo "Tags are not provided."
-
+            
         - run:
             environment:
               INPUT_PARAM_DEBUG: <<parameters.debug>>
