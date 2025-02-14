@@ -22,6 +22,10 @@ release-filters: &release-filters
 commands:
   check-calculation-results:    
     parameters:
+      output_folder:
+        type: string
+        default: "outputs"
+        description: "The directory where file with outputs will be created."
       output_file:
         type: string
         default: ""
@@ -44,12 +48,12 @@ commands:
         description: "Expected next alpha version."
     steps:
       - attach_workspace:
-          at: /home/circleci/git-version/calculation_results
+          at: /home/circleci/git-version/<< parameters.output_folder >>
       
       - run:
           name: Check results
           command: |            
-            source /home/circleci/git-version/calculation_results/<< parameters.output_file >>
+            source /home/circleci/git-version/arameters.output_folder >>/<< parameters.output_file >>
 
             echo "NEXT_VERSION_PROD=${NEXT_VERSION_PROD}"
             if [[ "${NEXT_VERSION_PROD}" != "<< parameters.expected_next_version_prod >>" ]]; then
