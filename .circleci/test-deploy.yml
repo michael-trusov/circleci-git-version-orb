@@ -197,7 +197,7 @@ workflows:
       # Test your orb's commands in a custom job and test your orb's jobs directly as a part of this workflow.
       - test-calculation:
           filters: *filters
-      - git-version/use-git-tags-for-calculation:
+      - git-version/use_git_tags_for_calculation:
           debug: "true"
           output_file: test8
           filters: *filters

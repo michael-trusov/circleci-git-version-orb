@@ -8,6 +8,6 @@ usage:
   workflows:
     use-my-orb:
       jobs:
-        - git-version/use-git-tags-for-calculation:
+        - git-version/use_git_tags_for_calculation:
             debug: "true"
             output_file: versions
