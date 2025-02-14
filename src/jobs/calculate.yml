@@ -27,12 +27,12 @@ parameters:
 
   output_folder:
     type: string
-    default: calculation_results
+    default: outputs
     description: "The working directory where file with outputs will be created."
 
   output_file:
     type: string
-    default: next_versions
+    default: versions
     description: "The name of the file where outputs will be saved."
 
 steps:
