@@ -53,7 +53,7 @@ commands:
       - run:
           name: Check results
           command: |            
-            source /home/circleci/git-version/arameters.output_folder >>/<< parameters.output_file >>
+            source /home/circleci/git-version/<< parameters.output_folder >>/<< parameters.output_file >>
 
             echo "NEXT_VERSION_PROD=${NEXT_VERSION_PROD}"
             if [[ "${NEXT_VERSION_PROD}" != "<< parameters.expected_next_version_prod >>" ]]; then
