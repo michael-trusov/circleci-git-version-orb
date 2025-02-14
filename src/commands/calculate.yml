@@ -38,7 +38,7 @@ steps:
 
   - when:
       condition: "<< parameters.tags >>"
-      steps:      
+      steps:
         - run:
             name: check tags
             command: echo "Tags are provided."
