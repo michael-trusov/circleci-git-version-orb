@@ -40,6 +40,7 @@ steps:
       condition: "<< parameters.tags >>"
       steps:      
         - run:
+            name: check tags
             command: echo "Tags are provided."
 
         - run:
@@ -58,6 +59,7 @@ steps:
             at: /home/circleci/git-version/<< parameters.input_folder >>
 
         - run:
+            name: check tags
             command: echo "Tags are not provided."
 
         - run:
