@@ -1,5 +1,6 @@
 description: >
-  This command calculates next versions based on passed collection of tags.
+  This command calculates next versions based on passed collection of tags or, in case when this parameter is not provided, 
+  calculation will be done based on the content of the file which is specified in input_file parameter.
 
 parameters:
   debug:

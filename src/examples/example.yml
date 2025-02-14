@@ -4,10 +4,10 @@ description: >
 usage:
   version: 2.1
   orbs:
-    git-version: mt-lab/git-version@1.0.0
+    git-version: mt-lab/git-version@1.0.1
   workflows:
     use-my-orb:
       jobs:
-        - git-version/calculate:
+        - git-version/use-git-tags-for-calculation:
             debug: "true"
             output_file: versions

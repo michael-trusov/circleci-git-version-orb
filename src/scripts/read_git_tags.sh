@@ -29,16 +29,12 @@ debug_array_state() {
     fi
 }
 
-# get Git tags and store them in an array
+# Note: get Git tags and store them in an array
 mapfile -t tags < <(git tag -l)
 debug_array_state "Collection of git tags read from the repo" tags
 
-# join array elements into a space-separated string
+# Note: join array elements into a space-separated string
 tags_string="${tags[*]}"
 
-# save to file
+# Note: save to file
 echo "$tags_string" > "${INPUT_PARAM_INPUT_FOLDER}/${INPUT_PARAM_INPUT_FILE}"
-
-# Print confirmation
-#echo "Tags saved to tags.txt"
-#mapfile -t versions < <(tr -s ' ' '\n' < filename.txt)
