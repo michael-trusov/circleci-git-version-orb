@@ -35,14 +35,6 @@ parameters:
     default: versions
     description: "The name of the file where outputs will be saved."
 
-  registry:
-    type: string
-    description: "The registry where the image will be stored."
-
-  repository:
-    type: string
-    description: "The repository where the image will be stored."
-
 steps:
   - checkout
 
