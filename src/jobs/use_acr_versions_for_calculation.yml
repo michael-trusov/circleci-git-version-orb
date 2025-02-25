@@ -61,7 +61,7 @@ steps:
       command: <<include(scripts/create_input_folder.sh)>>
 
   - run:
-      name: Read all git tags and store them in '<< parameters.input_folder >>/<< parameters.input_file >>' file
+      name: Read the latest available version from ACR and store it in '<< parameters.input_folder >>/<< parameters.input_file >>' file
       environment:
         INPUT_PARAM_DEBUG: <<parameters.debug>>
         INPUT_PARAM_INPUT_FOLDER: << parameters.input_folder >>
