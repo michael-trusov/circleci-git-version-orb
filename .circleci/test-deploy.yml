@@ -202,7 +202,8 @@ workflows:
           output_file: test8
           filters: *filters
       - git-version/use_acr_versions_for_calculation:
-          debug: "true"
+          debug: "true"         
+          input_file: "params9" 
           output_file: test9
           registry: "YoutilityCr"
           repository: "helm/beta/address-api"
