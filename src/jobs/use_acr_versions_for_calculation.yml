@@ -1,5 +1,5 @@
 description: >
-  This package allows to calculate next version of the artifact based on the git tags.
+  This package allows to calculate next version of the artifact based on the versions available in ACR.
 
 executor:
   name: default
@@ -44,7 +44,15 @@ parameters:
     description: "The repository where the image will be stored."
 
 steps:
-  - checkout
+  - helm/install-helm-client:
+      version: "v3.7.2"
+
+  - azure-cli/install
+
+  - jq/install:
+      version: jq-1.7
+
+  - setup_remote_docker
 
   - run:
       name: Create '<< parameters.input_folder >>' folder
@@ -58,7 +66,9 @@ steps:
         INPUT_PARAM_DEBUG: <<parameters.debug>>
         INPUT_PARAM_INPUT_FOLDER: << parameters.input_folder >>
         INPUT_PARAM_INPUT_FILE: << parameters.input_file >>
-      command: <<include(scripts/read_git_tags.sh)>>
+        REGISTRY: << parameters.registry >>
+        REPOSITORY: << parameters.repository >>
+      command: <<include(scripts/read_acr_versions.sh)>>
 
   - persist_to_workspace:
       root: << parameters.input_folder >>
