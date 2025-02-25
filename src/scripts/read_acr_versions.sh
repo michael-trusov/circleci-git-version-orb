@@ -15,6 +15,7 @@ debug_message "REGISTRY=$REGISTRY"
 
 current_version_meta_data=$(az acr manifest list-metadata --username $ACR_USERNAME --password $ACR_PASSWORD --registry $REGISTRY --name $REPOSITORY --top 1 --orderby time_desc)
 current_latest_tag=$(echo "$current_version_meta_data" | jq -r '.[0].tags[0]')
+current_latest_tag="v${current_latest_tag"}"
 debug_message "current_latest_tag: $current_latest_tag"
 
 # Note: save to file
