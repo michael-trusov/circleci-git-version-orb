@@ -11,3 +11,11 @@ usage:
         - git-version/use_git_tags_for_calculation:
             debug: "true"
             output_file: versions
+
+        - git-version/use_acr_versions_for_calculation:
+            debug: "true"         
+            input_file: "input" 
+            output_file: "output"
+            registry: "MyAcrRegistry"
+            repository: "helm/beta/myservice-api"
+

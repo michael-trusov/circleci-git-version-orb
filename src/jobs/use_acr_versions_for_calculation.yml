@@ -1,5 +1,6 @@
 description: >
   This package allows to calculate next version of the artifact based on the versions available in ACR.
+  Note: It is required to set up ACR_USERNAME and ACR_PASSWORD environment variables in the context in CirleCi project settings.
 
 executor:
   name: default
@@ -68,7 +69,7 @@ steps:
         INPUT_PARAM_INPUT_FILE: << parameters.input_file >>
         REGISTRY: << parameters.registry >>
         REPOSITORY: << parameters.repository >>
-      command: <<include(scripts/read_acr_versions.sh)>>
+      command: <<include(scripts/read_latest_helm_chart_version_from_acr.sh)>>
 
   - persist_to_workspace:
       root: << parameters.input_folder >>
