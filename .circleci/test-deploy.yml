@@ -201,6 +201,16 @@ workflows:
           debug: "true"
           output_file: test8
           filters: *filters
+      - git-version/use_acr_versions_for_calculation:
+          debug: "true"         
+          input_file: "params9" 
+          output_file: test9
+          registry: "YoutilityCr"
+          repository: "helm/beta/address-api"
+          filters: *filters
+          requires:
+            - test-calculation
+            - git-version/use_git_tags_for_calculation
       # The orb must be re-packed for publishing, and saved to the workspace.
       - orb-tools/pack:
           filters: *release-filters

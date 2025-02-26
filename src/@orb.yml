@@ -6,3 +6,8 @@ description: >
 display:
   home_url: "https://github.com/michael-trusov/circleci-git-version-orb"
   source_url: "https://github.com/michael-trusov/circleci-git-version-orb"
+
+orbs:
+  helm: circleci/helm@0.2.3
+  azure-cli: circleci/azure-cli@1.2.2
+  jq: circleci/jq@3.0.0
